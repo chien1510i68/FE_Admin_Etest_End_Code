@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
-import { Avatar, Drawer, Dropdown, Space } from "antd";
+import { UserOutlined, LogoutOutlined, EditOutlined } from "@ant-design/icons";
+import { Avatar, Drawer, Dropdown, Modal, Space } from "antd";
 import { useNavigate } from "react-router-dom";
 import RecordUser from "../../Components/RecordUser/RecordUser";
 import Cookies from "js-cookie";
 import { getProfileUser } from "../../Services/lead";
+import ChangePassword from "../../Components/Modal/ChangePassword";
 
 function HeaderEtest(props) {
   const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = useState();
+  const [openModal, setOpenModal] = useState();
   const [data, setData] = useState({});
 
   const handleGetProfileUser = () => {
@@ -33,9 +35,18 @@ function HeaderEtest(props) {
       },
     },
     {
+      icon: <EditOutlined />,
+      label: "Đổi mật khẩu",
+      key: "2",
+      onClick: () => {
+        setOpenModal(true);
+        navigate("/adminpage/user/changePassword");
+      },
+    },
+    {
       icon: <LogoutOutlined />,
       label: "Đăng xuất",
-      key: "2",
+      key: "3",
       onClick: () => {
         navigate("/");
         Cookies.remove("jwt");
@@ -58,6 +69,24 @@ function HeaderEtest(props) {
             {`${checkPermission ? "ADMIN" : "STAFF"}`}
           </Space>
         </Dropdown>
+        <Modal
+          // openModal={openModal}
+          open={openModal}
+          footer={null}
+          onCancel={() => {
+            setOpenModal(false);
+            navigate("/adminpage/user");
+          }}
+        >
+          <ChangePassword
+            onCancel={(open) => {
+              if (!open) {
+                setOpenModal(false);
+              }
+            }}
+          />
+        </Modal>
+
         <Drawer
           title="Thông tin chi tiết của người dùng"
           width={500}

@@ -8,7 +8,7 @@ const { Header, Content, Sider } = Layout;
 
 function PageETest(props) {
   return (
-    <Layout className="">
+    <Layout className="h-[100vh] ">
       <Sider width={250}>
         <Sidebar className="leading-[200px]" />
       </Sider>

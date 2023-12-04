@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
-import React, { useContext, useState } from "react";
+import { Button, Form, Input, message } from "antd";
+import React, { useState } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../Services/lead";
@@ -14,9 +14,14 @@ function Login(props) {
     setLoading(true);
     login(values)
       .then((res) => {
-        if (res.status === 200) {
+        if (res?.data?.success === true) {
           Cookies.set("jwt", res?.data?.data?.jwt);
+          message.success("Đăng nhập thành công");
           setLoading(false);
+        }
+        if (res?.data?.success === false) {
+          navgate("/");
+          message.error("Hết phiên đăng nhập");
         }
         const checkPermission = res?.data?.data?.roles?.at(0);
         if (checkPermission === "ADMIN") {
@@ -34,11 +39,8 @@ function Login(props) {
   };
   return (
     <div className="relative flex h-[100vh]">
-      <div
-      // className="p-21.6 w-1/2 bg-orange-300 border border-solid border-transparent"
-      >
-        {/* <img src="../../Assets/Images/EnglishLogo.jpg" alt="" /> */}
-        <img src={pic} alt="" className="w-[42rem] h-[38.7rem] " />
+      <div>
+        <img src={pic} alt="" className="w-[42rem] h-[43rem] " />
       </div>
       <Form
         className="login_form"
@@ -87,7 +89,7 @@ function Login(props) {
             Đăng nhập
           </Button>
         </Form.Item>
-        {/* <Form.Item>
+        <Form.Item>
           <Button
             type="link"
             className="login-form-forgot"
@@ -95,7 +97,7 @@ function Login(props) {
           >
             Quên mật khẩu
           </Button>
-        </Form.Item> */}
+        </Form.Item>
       </Form>
     </div>
   );

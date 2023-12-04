@@ -244,7 +244,7 @@ function ReviewShedule(props) {
           size="middle"
         />
         <Drawer
-          title="Thông tin chi tiết chương trình học"
+          title="Thông tin chi tiết lịch ôn tập"
           width={600}
           open={openDrawer}
           onClose={() => setOpenDrawer(false)}

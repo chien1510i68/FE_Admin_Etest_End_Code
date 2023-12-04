@@ -57,13 +57,13 @@ function Sidebar(props) {
       return "9";
     }
     if (pathname.includes("/adminpage/displayhome")) {
-      return "10";
+      return "13";
     }
     if (pathname.includes("/adminpage/displaypages")) {
-      return "11";
+      return "14";
     }
     if (pathname.includes("/adminpage/displayprogram")) {
-      return "12";
+      return "15";
     }
   };
   const items = [
@@ -154,7 +154,7 @@ function Sidebar(props) {
       children: [
         {
           label: "Quản lý đề thi",
-          key: "11",
+          key: "10",
           icon: <FileTextOutlined />,
           onClick: () => {
             navigate("/adminpage/infor-exam");
@@ -163,7 +163,7 @@ function Sidebar(props) {
         {
           label: "Quản lý bài thi",
           icon: <FileTextOutlined />,
-          key: "12",
+          key: "11",
           onClick: () => {
             navigate("/adminpage/user-test");
           },
@@ -171,7 +171,7 @@ function Sidebar(props) {
         {
           label: "Thống kê",
           icon: <FileTextOutlined />,
-          key: "13",
+          key: "12",
           onClick: () => {
             navigate("/adminpage/statistics");
           },
@@ -185,32 +185,31 @@ function Sidebar(props) {
       children: [
         {
           label: "Trang chủ",
-          key: "10",
+          key: "13",
           onClick: () => {
             navigate("/adminpage/displayhome");
           },
         },
         {
           label: "Pages",
-          key: "11",
+          key: "14",
           onClick: () => {
             navigate("/adminpage/displaypages");
           },
         },
         {
           label: "Chương trình",
-          key: "12",
+          key: "15",
           onClick: () => {
             navigate("/adminpage/displayprogram");
           },
         },
       ],
     },
-    
   ];
   return (
     <div>
-      <div className="p-2.5 m-2.5 bg-white " >
+      <div className="p-2.5 m-2.5 bg-white ">
         <img src={logo} alt="" className="w-[4rem] ml-[4rem] h-[5rem] " />
       </div>
       <Menu

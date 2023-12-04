@@ -42,9 +42,8 @@ function TableNews(props) {
 
   const showhowConfirm = () => {
     confirm({
-      title: "Xoá người dùng ",
-      content:
-        "Việc này sẽ xóa người dùng được chọn. Bạn có chắc chắn muốn xóa?",
+      title: "Xoá tin tức ",
+      content: "Việc này sẽ xóa tin tức được chọn. Bạn có chắc chắn muốn xóa?",
       onOk: handleDeleteAll,
       onCancel() {
         console.log("Cancel");
@@ -198,7 +197,7 @@ function TableNews(props) {
             </Button>
             ,
             <Input.Search
-              placeholder="Nhập tên người dùng"
+              placeholder="Nhập tên tin tức"
               onChange={handleSearch}
               value={searchData}
               defaultValue={null}

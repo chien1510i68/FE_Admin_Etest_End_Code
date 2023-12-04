@@ -10,8 +10,10 @@ function ForgotPassword(props) {
   const onFinish = (values) => {
     forgotPassword(values)
       .then((res) => {
-        if (res.status === 200) {
+        if (res?.data?.success === true) {
           message.success("Vui lòng check emai");
+        } else if (res?.data?.error?.statusCode === 500) {
+          message.error(res?.data?.error?.message);
         }
       })
       .finally(() => {});
@@ -52,7 +54,7 @@ function ForgotPassword(props) {
             onClick={() => {
               navigate("/");
             }}
-            className="register"
+            className="register top-[1px] left-[75%] "
           >
             Đăng nhập
           </Button>

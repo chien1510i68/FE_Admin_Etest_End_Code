@@ -122,7 +122,7 @@ function AddEditNews({ onSuccess, openModal, data, onOpenChange }) {
                 console.log("file:: ", file);
               },
             }}
-            action="https://01ad-118-70-132-104.ngrok-free.app/file/upload"
+            action="process.env.BASE_URL/file/upload"
           />
 
           <ProFormText

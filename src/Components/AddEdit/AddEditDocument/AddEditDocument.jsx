@@ -162,7 +162,7 @@ function AddEditDocument({ onSuccess, openModal, data, onOpenChange }) {
                 console.log("file:: ", file);
               },
             }}
-            action="https://be8c-118-70-132-104.ngrok-free.app/file/upload"
+            action="process.env.BASE_URL/file/upload"
           />
           <ProFormUploadButton
             width="md"
@@ -193,7 +193,7 @@ function AddEditDocument({ onSuccess, openModal, data, onOpenChange }) {
                 console.log("file:: ", file);
               },
             }}
-            action="https://be8c-118-70-132-104.ngrok-free.app/file/upload"
+            action="process.env.BASE_URL/file/upload"
           />
         </ProForm.Group>
       </ModalForm>

@@ -37,7 +37,7 @@ function FilterUser({ onSearch, hide }) {
           />
           <ProFormText
             width="md"
-            name="username"
+            name="userName"
             label="Username"
             placeholder="Username"
           />

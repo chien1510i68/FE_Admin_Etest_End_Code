@@ -22,6 +22,7 @@ import "../style.css";
 import _ from "lodash";
 
 function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
+  console.log("data", data);
   const [dataRole, setDataRole] = useState([]);
   const [dataService, setDataService] = useState([]);
   const [switchValue, setSwitchValue] = useState(false);
@@ -152,6 +153,7 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
               },
             ]}
           />
+          {/* {!data.userId && ( */}
           <ProFormText
             width="md"
             name="password"
@@ -164,6 +166,7 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
               },
             ]}
           />
+          {/* )} */}
           <ProFormDatePicker
             width="md"
             name="dateOfBirth"
@@ -223,9 +226,11 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
           />
           <ProFormUploadButton
             name="avatar"
+            initialValue={data?.userId ? data.avatar : ""}
             label="Avatar"
             title="Click to upload"
             fileList={listFile}
+            // fileList={}
             transform={(value) => {
               return {
                 avatar: fieldFile || "", // cập nhật không upload file mới thì lấy giá trị value trong form
@@ -239,11 +244,9 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
               multiple: true,
               onRemove: () => setListFile([]),
               openFileDialogOnClick: true,
-              onChange: (file) => {
-                console.log("file:: ", file);
-              },
+              onChange: (file) => {},
             }}
-            action="https://1721-118-70-132-104.ngrok-free.app/file/upload"
+            action="process.env.BASE_URL/file/upload"
           />
           <ProFormSelect
             width="md"
@@ -259,16 +262,49 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
               },
             ]}
           />
+
           <ProFormSelect
             width="md"
             name="services"
-            initialValue={
-              data?.userId
-                ? data?.services.map((services) => {
-                    return services.name;
-                  })
-                : ""
-            }
+            convertValue={(value) => {
+              if (value?.at(0)?.name) {
+                const list = value.map((val) => {
+                  return {
+                    value: val?.id,
+                    label: val?.title,
+                  };
+                });
+                return list;
+              } else {
+                return value;
+              }
+            }}
+            transform={(value) => {
+              console.log("value:: ", value);
+
+              if (value?.at(0)?.name) {
+                console.log("true");
+                const list = value.map((val) => val?.id);
+                return {
+                  services: list,
+                };
+              } else {
+                return { services: value };
+              }
+            }}
+            // convertValue={(value) => {
+            //   console.log("value", value);
+            //   if (data?.userId) {
+            //     const name = value.map((name) => {
+            //       return {
+            //         label: name.name,
+            //         value: name.id,
+            //       };
+            //     });
+            //     console.log("name", name);
+            //     return name;
+            //   }
+            // }}
             mode="multiple"
             options={dataService}
             label="Dịch vụ"

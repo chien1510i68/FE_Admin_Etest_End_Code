@@ -122,7 +122,7 @@ function AddEditEp({ onSuccess, openModal, data, onOpenChange }) {
                 console.log("file:: ", file);
               },
             }}
-            action="https://7387-27-79-157-161.ngrok-free.app/file/upload"
+            action="process.env.BASE_URL/file/upload"
           />
           <ProFormText
             width="md"

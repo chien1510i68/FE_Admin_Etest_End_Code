@@ -29,7 +29,9 @@ function EditConsultingRegister({ onSuccess, openModal, data, onOpenChange }) {
   return (
     <>
       <ModalForm
-        title={data?.id ? "Chỉnh sửa thông tin của Tin Tức" : "Thêm Tin Tức"}
+        title={
+          data?.id ? "Chỉnh sửa thông tin của khách hàng" : "Thêm khách hàng"
+        }
         initialValues={data}
         modalProps={{
           destroyOnClose: true,

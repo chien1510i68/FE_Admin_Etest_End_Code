@@ -41,9 +41,8 @@ function ExamSchedule(props) {
 
   const showhowConfirm = () => {
     confirm({
-      title: "Xoá người dùng ",
-      content:
-        "Việc này sẽ xóa người dùng được chọn. Bạn có chắc chắn muốn xóa?",
+      title: "Xoá lịch thi ",
+      content: "Việc này sẽ xóa lịch thi được chọn. Bạn có chắc chắn muốn xóa?",
       onOk: handleDeleteAll,
       onCancel() {
         console.log("Cancel");

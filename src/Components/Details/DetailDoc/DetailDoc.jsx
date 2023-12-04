@@ -48,7 +48,7 @@ function DetailDoc(props) {
         <Descriptions.Item label="Ngày cập nhật" span={4}>
           {dataDoc?.updateDate}
         </Descriptions.Item>
-        <Descriptions.Item label="Nội tài liệu" span={2}>
+        <Descriptions.Item label="Nội dung tài liệu" span={2}>
           {dataDoc?.content}
         </Descriptions.Item>
       </Descriptions>

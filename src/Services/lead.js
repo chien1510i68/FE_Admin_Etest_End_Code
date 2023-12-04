@@ -12,6 +12,15 @@ export const forgotPassword = ({email}) =>{
     return axios.post('/user/forgot/password', {email})
 }
 
+export const changepassword = (values) =>{
+    const password = {
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+        confirmNewPassword: values.confirmNewPassword,
+    }
+    return axios.post('/user/change/password', password)
+}
+
 // *************** User **********
  
 // API create User
@@ -50,7 +59,7 @@ export const filterUser = (values) =>{
     const userValues = {
         start: 0,
         limit: 10000,
-        username: values?.username,
+        userName: values?.userName,
         dateFrom: values?.dateFrom,
         dateTo: values?.dateTo,
         dobFrom: values?.dobFrom,
@@ -67,7 +76,7 @@ export const filterStaff = (values) =>{
     const userValues = {
         start: 0,
         limit: 10000,
-        username: values?.username,
+        userName: values?.userName,
         dateFrom: values?.dateFrom,
         dateTo: values?.dateTo,
         dobFrom: values?.dobFrom,
@@ -86,7 +95,7 @@ export const filterCustomer = (values) =>{
     const userValues = {
         start: 0,
         limit: 10000,
-        username: values?.username,
+        userName: values?.userName,
         dateFrom: values?.dateFrom,
         dateTo: values?.dateTo,
         dobFrom: values?.dobFrom,
@@ -108,7 +117,6 @@ export const filterIsVerifiedCustomer = (values) =>{
         limit: 10000,
         roleId: "CUSTOMER",
         isVerified: false
-
     }
     return axios.post('/user/filter', isVerifiedCustomer)
 }
@@ -314,7 +322,6 @@ export const filterES = (values) =>{
 
 // ****************** UploadFile ******
 export const uploadFile = (file) =>{
-    console.log("data res: ",file)
     const formData = new FormData()
     formData.append("file", file)
     return axios.post('/file/upload', formData)

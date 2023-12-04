@@ -237,7 +237,7 @@ function Document(props) {
 
         {/* Hiển thị thông tin chi tiết của người dùng  */}
         <Drawer
-          title="Thông tin chi tiết về lịch thi"
+          title="Thông tin chi tiết về tài liệu"
           width={550}
           open={openDrawer}
           onClose={() => {
@@ -256,10 +256,6 @@ function Document(props) {
           pagination={{
             pageSize: 3,
           }}
-          // scroll={{
-          //   y: 413,
-          // }}
-          // loading={loading}
         />
         <div
           className="absolute bottom-6"

@@ -1,6 +1,7 @@
 import {
   CloseOutlined,
   DeleteOutlined,
+  DownloadOutlined,
   EditOutlined,
   FilterOutlined,
   SolutionOutlined,
@@ -18,6 +19,7 @@ import EditConsultingRegister from "../../AddEdit/EditConsultingRegister/EditCon
 import DetailConsultingRegister from "../../Details/ConsultingRegister/ConsultingRegister";
 import { useNavigate } from "react-router-dom";
 import FilterConsultingRegister from "../../FormFilter/FilterConsultingRegister";
+import { utils, writeFileXLSX } from "xlsx";
 
 function ConsultingRegister(props) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -59,6 +61,23 @@ function ConsultingRegister(props) {
 
   const handleClick = (open) => {
     setClicked(open);
+  };
+
+  const renameColumn = data.map((item) => ({
+    "Tên khách hàng": item.name,
+    "Số điện thoại": item.phone,
+    Email: item.email,
+    "Nội dung tư vấn": item.contentAdvice,
+    "Trạng thái tư vấn": item.status,
+    "Ngày tạo": item.createdDate,
+    "Ngày cập nhật": item.updateDate,
+  }));
+
+  const hanldeExportFile = () => {
+    const ws = utils.json_to_sheet(renameColumn);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, "Khách hàng");
+    writeFileXLSX(wb, "Danh sách khách hàng đăng ký tư vấn.xlsx");
   };
 
   const handleGetCR = () => {
@@ -186,6 +205,13 @@ function ConsultingRegister(props) {
                 handleSearchConsulting(values);
               }}
             />
+            <Button
+              icon={<DownloadOutlined />}
+              onClick={hanldeExportFile}
+              className="border-1677ff text-1677ff mr-[10px]"
+            >
+              Export Excel
+            </Button>
             <Popover
               content={
                 <FilterConsultingRegister
