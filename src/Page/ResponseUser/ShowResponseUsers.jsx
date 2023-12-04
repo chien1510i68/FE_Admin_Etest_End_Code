@@ -149,7 +149,7 @@ function ShowResponseUsers(props) {
   );
 
   return (
-    <div>
+    <div className="h-[100vh]">
       <h2 className="text-center text-xl text-orange-500 uppercase font-medium mb-10">
         trang quản lý bài thi của học viên{" "}
       </h2>
@@ -163,7 +163,7 @@ function ShowResponseUsers(props) {
         <Button icon={<FilterOutlined />} onClick={() => setOpen(true)} />
       </Popover>
 
-      <Table dataSource={data1} className="text-center">
+      <Table dataSource={data1} className="text-center h-[80vh] overflow-auto">
         <Column align="center" title="Email" dataIndex="email" key="nameExam" />
         <Column
           align="center"

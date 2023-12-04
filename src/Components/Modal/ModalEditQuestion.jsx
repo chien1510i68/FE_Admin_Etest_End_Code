@@ -1,26 +1,12 @@
-import {
-  Button,
-  Checkbox,
-  Col,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Space,
-  Tabs,
-  message,
-  notification,
-} from "antd";
-import React, { useContext, useEffect, useState } from "react";
-import { AppContext } from "../AppContext/AppContext";
-import { Radio } from "antd";
-import "./addAnswer.css";
-import FormListQuestion from "../FormFilter/FormListAnswer";
+import { Button, Form, Input, Modal, Radio, Tabs, notification } from "antd";
 import { useForm } from "antd/es/form/Form";
+import TextArea from "antd/es/input/TextArea";
+import React, { useContext, useState } from "react";
+import { updateQuestion } from "../../Services/APImocktest";
+import { AppContext } from "../AppContext/AppContext";
 import FormEditListQuestion from "../FormFilter/FormEditListAnswer";
 import FormEditListChoiceCorrect from "../FormFilter/FormEditListChoiceCorrect";
-import TextArea from "antd/es/input/TextArea";
-import { updateQuestion } from "../../Services/APImocktest";
+import "./addAnswer.css";
 
 const onFinishCreateQuestion = (values) => {
   console.log("Received values of form:", values);
@@ -38,11 +24,11 @@ function ModalEditQuestion({ dataQuestion, answers, handleGetDataExam }) {
     listQuestion,
     isOpenModalEditQuestion,
   } = data;
-  // const handleSelectRadio = (e) => {
-  //   dispatch({ type: "listChoiceCorrect", payload: e.target.value });
-  //   setSelect(e.target.value);
-  //   console.log("answers : " , answers);
-  // };
+  const handleSelectRadio = (e) => {
+    dispatch({ type: "listChoiceCorrect", payload: e.target.value });
+    setSelect(e.target.value);
+    // console.log("answers : " , answers);
+  };
   const handleCancel = () => {
     dispatch({ type: "closeModalEditQuestion" });
     dispatch({ type: "listAnswer", payload: null });
@@ -50,70 +36,77 @@ function ModalEditQuestion({ dataQuestion, answers, handleGetDataExam }) {
   };
 
   const handleCloseAndSave = (values) => {
-
-    
     if (select === null && !errorDisplayed) {
       notification.error({ message: "Kiểu câu hỏi không được để trống" });
       setErrorDisplayed(true);
-    } else if (listAnswer != null && listChoiceCorrect != null) {
-      updateQuestion({
-        id: dataQuestion.id,
-        content: values.content,
-        point: values.point,
-        type: select,
-        listAnswer: listAnswer,
-        choiceCorrect: listChoiceCorrect,
-        description: "Day la phan mo ta ",
-      }).then((response) => {
-          console.log(response);
-          if (response.data.success === true) {
-            dispatch({ type: "listAnswer", payload: null });
-            dispatch({ type: "resetListChoiceCorrect" });
-            notification.success({ message: "Lưu thành công câu hỏi " });
-            // handleGetDataExam();
-            dispatch({type : "updateExam"})
-
-            handleCancel();
-
-          }
-        })
-        .catch((err) => {
-          notification.error({ message: "Lỗi tạo câu hỏi" });
+    } else if (listAnswer === null && type !== "Essay_answers") {
+      
+        notification.error({
+          message: "Danh sách câu trả lời ĐÚNG không được để trống",
         });
+        handleCancel();
+        setErrorDisplayed(true);
+      } else if ( listChoiceCorrect === null && type !== "Essay_answers"){
+            notification.error({message : "Danh sách câu trả lời ĐÚNG không được để trống"})
+            handleCancel()
+      }
+      
+      else {
+        const newListAnswer =(listAnswer!== null)? listAnswer?.filter((item) => item !== undefined) : []
+        const newListChoiceCorrect = (listChoiceCorrect !== null) ? listChoiceCorrect : []
+        updateQuestion({
+          id: dataQuestion.id,
+          content: values.content,
+          point: values.point,
+          type: type,
+          listAnswer: newListAnswer,
+          choiceCorrect:newListChoiceCorrect ,
+          description: "Day la phan mo ta ",
+        })
+          .then((response) => {
+            console.log(response);
+            if (response.data.success === true) {
+              dispatch({ type: "listAnswer", payload: null });
+              dispatch({ type: "resetListChoiceCorrect" });
+              notification.success({ message: "Lưu thành công câu hỏi " });
+              handleGetDataExam();
+              dispatch({ type: "updateExam" });
 
-      setErrorDisplayed(false);
-    } else if (!errorDisplayed) {
-      notification.error({
-        message:
-          listChoiceCorrect === null
-            ? "Danh sách câu trả lời ĐÚNG không được để trống"
-            : "Danh sách câu trả lời không được để trống ",
-      });
-      handleCancel();
+              handleCancel();
+            }
+          })
+          .catch((err) => {
+            notification.error({ message: "Lỗi tạo câu hỏi" });
+          });
 
-      setErrorDisplayed(true);
+        //   handleCancel()
+        // setErrorDisplayed(false);
+      }
     }
-    
-  //  console.log(values);
-  };
+    // } else if (
+    //   !errorDisplayed &&
+    //   (type === "Single_answer" || type === "Multi_answer")
+    // ) {
+    //   notification.error({
+    //     message:
+         
+    //         ? "Danh sách câu trả lời ĐÚNG không được để trống"
+    //         : "Danh sách câu trả lời không được để trống ",
+    //   });
+    //   handleCancel();
+
+    //   setErrorDisplayed(true);
+    // }
+
+    //  console.log(values);
+  
 
   const onChangeTypeQuestion = (e) => {
     console.log("radio checked", e.target.value);
     setSelect(e.target.value);
     dispatch({ type: "type", payload: e.target.value });
   };
-  const newListAnswer =
-    listAnswer && listAnswer.filter((item) => item !== undefined);
 
-  // const onChange = (checkedValues) => {
-  //   console.log("checked = ", checkedValues);
-  //   setSelect(checkedValues);
-  //   dispatch({ type: "listChoiceCorrect", payload: checkedValues });
-  // };
-
-  // useEffect(() => {
-  //   console.log(select);
-  // }, [select]);
   const items = [
     {
       key: "1",
@@ -133,48 +126,6 @@ function ModalEditQuestion({ dataQuestion, answers, handleGetDataExam }) {
       key: "2",
       label: "Câu trả lời đúng",
       children: (
-        // <>
-        //   {listAnswer === null ? (
-        //     <h2>Không có lựa chọn nào</h2>
-        //   ) : type === "Single_answer" ? (
-        //     <Space.Compact
-        //       style={{
-        //         width: "100%",
-        //       }}
-        //     >
-        //       <Radio.Group
-        //         onChange={(e) => handleSelectRadio(e)}
-        //         value={select}
-        //         className="w-full"
-        //       >
-        //         <Row>
-        //           {listAnswer?.map((item, index) => (
-        //             <Col span={8} className="my-5">
-        //               <Radio value={index}>{item.answer}</Radio>
-        //             </Col>
-        //           ))}
-        //         </Row>
-        //       </Radio.Group>
-        //     </Space.Compact>
-        //   ) : type === "Multi_answer" ? (
-        //     <Checkbox.Group
-        //       style={{
-        //         width: "100%",
-        //       }}
-        //       onChange={onChange}
-        //     >
-        //       <Row>
-        //         {listAnswer?.map((item, index) => (
-        //           <Col span={8} className="my-5">
-        //             <Checkbox value={index}>{item?.answer}</Checkbox>
-        //           </Col>
-        //         ))}
-        //       </Row>
-        //     </Checkbox.Group>
-        //   ) : (
-        //     <h2>Câu hỏi tự luận không tồn tại đáp án đúng</h2>
-        //   )}
-        // </>
         <FormEditListChoiceCorrect
           dataQuestion={dataQuestion}
           questionType={select}

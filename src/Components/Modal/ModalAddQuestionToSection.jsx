@@ -51,25 +51,22 @@ function ModalAddQuestionToSection({ idSection, title ,handleGetDataExam}) {
   };
 
   const handleCloseAndSave = (values) => {
-    if (select === null && !errorDisplayed) {
+    console.log("values" ,values);
+    if (select === null && !errorDisplayed ) {
       notification.error({ message: "Kiểu câu hỏi không được để trống" });
       setErrorDisplayed(true);
-    } else if (listAnswer === null) {
+    } else if (listAnswer === null && type !== "Essay_answers") {
       notification.error({
         message: "Danh sách câu trả lời không được để trống ",
       });
-    } else if (listChoiceCorrect === null) {
+    } else if (listChoiceCorrect === null && type !== "Essay_answers" ) {
       notification.error({
         message: "Danh sách câu trả lời ĐÚNG không được để trống ",
       });
      
-    } else if (
-      select !== null &&
-      listAnswer !== null &&
-      listChoiceCorrect !== null
-    ) {
+    } else  {
       // console.log("listChoiceCorrect :", listChoiceCorrect);
-      const newListAnswer = listAnswer.filter((item) => item !== undefined);
+      const newListAnswer = listAnswer?.filter((item) => item !== undefined);
       // console.log("listAnswer : ", newListAnswer);
       // console.log("content : ", values.content);
       // console.log("type:", type);
@@ -83,7 +80,7 @@ function ModalAddQuestionToSection({ idSection, title ,handleGetDataExam}) {
         choiceCorrect : listChoiceCorrect
       }).then((res)=>{
           if(res.data.success === true){
-            // handleGetDataExam()
+            handleGetDataExam()
             dispatch({type : 'updateExam'})
             notification.success({message : "Thêm thành công câu hỏi vào phần thi " + title})
           }else{
@@ -143,6 +140,7 @@ function ModalAddQuestionToSection({ idSection, title ,handleGetDataExam}) {
                 value={select}
                 defaultValue={null}
                 className="w-full"
+                name ="questionType"
               >
                 <Row>
                   {newListAnswer?.map((item, index) => (

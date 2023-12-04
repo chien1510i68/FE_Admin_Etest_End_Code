@@ -1,86 +1,74 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Collapse, Popconfirm, message, notification } from "antd";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../Components/AppContext/AppContext";
+
+// import React, { useState } from "react";
 import {
-  deleteExam,
-  deleteQuestion,
-  deleteSection,
-  getDataExam,
-} from "../../Services/APImocktest";
+  Button,
+  Collapse,
+  Input,
+  Popconfirm,
+  Select,
+  Space,
+  message,
+  notification,
+} from "antd";
+import { useParams } from "react-router-dom";
+import ModalAddQuestionToSection from "../../Components/Modal/ModalAddQuestionToSection";
+import ModalEditQuestion from "../../Components/Modal/ModalEditQuestion";
+import ModalEditSection from "../../Components/Modal/ModalEditSection";
+import {
+  handleDeleteSection,
+  handleGetDetailsExam,
+} from "../../handleLogic/handleSection";
+import { deleteQuestion } from "../../Services/APImocktest";
 import {
   DeleteFilled,
   EditFilled,
+  FolderOpenOutlined,
   PlusCircleOutlined,
 } from "@ant-design/icons";
-import { AppContext } from "../../Components/AppContext/AppContext";
-import ModalEditExam from "../../Components/Modal/ModalEditExam";
-import ModalEditSection from "../../Components/Modal/ModalEditSection";
-import ModalEditQuestion from "../../Components/Modal/ModalEditQuestion";
-import ModalAddQuestionToSection from "../../Components/Modal/ModalAddQuestionToSection";
-import { useNavigate } from "react-router-dom";
+import DropDown from "./DropDown";
+import { handleSetData } from "../Exam/handleExam";
 
-function CollapseExam({ dataItems }) {
+function CollapseExam(props) {
+  const { examId } = useParams();
+  const [items, setItems] = useState([]);
+  const [data1, setData1] = useState([]);
   const { data, dispatch } = useContext(AppContext);
-  const [items, setItems] = useState();
-  const [idExam, setIdExam] = useState(null);
-  const [dataExam, setDataExam] = useState(null);
+  const [dataSection, setDataSection] = useState(null);
   const [dataQuestion, setDataQuestion] = useState(null);
   const [listAnswer, setListAnswer] = useState(null);
-
   const [idSection, setIdSection] = useState(null);
   const [sectionTitle, setSectionTitle] = useState(null);
-  const [dataSection, setDataSection] = useState(null);
-  const [isDeletedQuestion, setIsDeletedQuestion] = useState(false);
-  const [isDeletedSection, setIsDeletedSection] = useState(false);
-  const [isDeletedExam, setIsDeletedExam] = useState(false);
-  const [listExam, setListExam] = useState([]);
-  const navigate = useNavigate();
-  const {isUpdateExam} = data
+  const [sourceData, setDataSource] = useState([]);
+  // const navigate = useNavigate();
+  const { typeSection } = data;
+  const { Search } = Input;
+  const handleGetData = async () => {
+    const exam = await handleGetDetailsExam(examId);
+    setData1(exam?.sections);
 
-  console.log("dataItems : ", dataItems);
-  const handleGetDataExam = async () => {
-    const res = getDataExam();
-
-    if (res?.data?.success === true) {
-      setListExam(res?.data?.data?.items);
-      console.log("listExam", listExam);
-      handleSetItems(res?.data?.data?.items);
-    }
+    setDataSource(exam?.sections);
+    // console.log("data", data1);
   };
-
-  const handleAddQuestionInSection = (id, title) => {
-    dispatch({ type: "openModalCreateQuestionInSection" });
-    setIdSection(id);
-    setSectionTitle(title);
-  };
-  const handleAddExam = () => {
-    notification.success({ message: "Clicked" });
-  };
-
-  const handleEditExam = (id, item) => {
-    console.log(id);
-    setIdExam(id);
-    setDataExam(item);
-    dispatch({ type: "openModalEditExam" });
-  };
-
-  const handleEditSection = (id, item) => {
-    dispatch({ type: "openModalEditSection" });
-    setIdSection(id);
-    setDataSection(item);
-  };
-  const handleEditQuestion = (question, listAnswer) => {
+  const handleEditQuestion = (e, question, listAnswer) => {
+    handleShowChildren(e);
     dispatch({ type: "openModalEditQuestion" });
     setListAnswer(listAnswer);
     setDataQuestion(question);
+    handleGetData();
     // console.log("Cau hoi va danh sach cau tra loi la " ,question , listAnswer);
   };
-  const handelDeleteQuestion = (id) => {
+  const handelDeleteQuestion = (e, id) => {
+    handleShowChildren(e);
+
     console.log(id);
     deleteQuestion(id)
       .then((res) => {
         if (res.data.success === true) {
           notification.success({ message: "Xóa thành công câu hỏi " });
-          handleGetDataExam();
+          handleGetData();
         }
         // console.log(res);
       })
@@ -89,45 +77,42 @@ function CollapseExam({ dataItems }) {
       });
     // message.success("Xóa thành công ");
   };
-  const handelDeleteSection = (id) => {
-    console.log(id);
-    deleteSection(id)
-      .then((res) => {
-        if (res.data === true) {
-          notification.success({ message: "Xóa thành công phần thi " });
-          handleGetDataExam();
-        }
-        // console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // message.success("Xóa thành công ");
+
+  const handleAddQuestionInSection = (e, id, title) => {
+    handleShowChildren(e);
+    dispatch({ type: "openModalCreateQuestionInSection" });
+    setIdSection(id);
+    setSectionTitle(title);
   };
-  const handelDeleteExam = (id) => {
-    console.log(id);
-    deleteExam(id)
-      .then((res) => {
-        if (res.data === true) {
-          notification.success({ message: "Xóa thành công bài thi " });
-          handleGetDataExam();
-        }
-        // console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+  const handleEditSection = (e, id, item, isEdit) => {
+    dispatch({ type: "openModalEditSection" });
+    setIdSection(id);
+    setDataSection(item);
+    handleShowChildren(e);
+    dispatch({ type: "setIsModalEditSection", payload: isEdit });
   };
-  const cancel = (e) => {
-    console.log(e);
-    // message.error("Click on No");
+
+  const deleSection = async (e, id) => {
+    handleShowChildren(e);
+    const res = await handleDeleteSection(id);
+    if (res === true) {
+      notification.success({ message: "Xóa thành công phần thi " });
+      handleGetData();
+    }
   };
-  const handleSetItems = (data) => {
+  const handleShowChildren = (e) => {
+    e.stopPropagation();
+  };
+
+  const handleSetItems = () => {
+    console.log("data test : ", data1);
     setItems(
-      data &&
-        data.map((item) => {
-          const listSection = item.sections.map((section) => {
-            const listQuestion = section.questions.map((question) => {
+      data1 &&
+        data1.map((section, index) => {
+          const listQuestion =
+            section &&
+            section?.questions?.map((question, index) => {
               const listAnswer = question.listAnswer.map((answer) => (
                 <p
                   key={answer.id}
@@ -139,155 +124,165 @@ function CollapseExam({ dataItems }) {
                 </p>
               ));
               return {
-                key: question.id,
+                key: index,
                 label: (
-                  <div className="flex items-center justify-between">
-                    <p
-                      onClick={() => {
-                        console.log(question.id);
-                      }}
-                    >
-                      {question.content}
-                    </p>
-                    <div>
-                      <EditFilled
-                        className="mx-5"
-                        onClick={() => {
-                          handleEditQuestion(question, listAnswer);
-                        }}
+                  <div className="grid grid-cols-4">
+                    <div className="col-span-1 mx-auto">{question.content}</div>
+                    <div className="col-span-1 mx-auto">
+                      {question.questionType}
+                    </div>
+                    <div className="col-span-1 mx-auto">{question.point}</div>
+                    <Space className="col-span-1 mx-auto">
+                      <Button
+                        icon={
+                          <EditFilled
+                            className="text-amber-600"
+                            onClick={(e) =>
+                              handleEditQuestion(e, question, listAnswer)
+                            }
+                          />
+                        }
                       />
+                      <Button
+                        icon={
+                          <Popconfirm
+                            title="Delete the task"
+                            placement="bottomRight"
+                            description="Bạn có muốn xóa câu hỏi này ?"
+                            onConfirm={(e) =>
+                              handelDeleteQuestion(e, question.id)
+                            }
+                            // onCancel={cancel}
+                            okText="Có"
+                            cancelText="Không"
+                          >
+                            <DeleteFilled className="text-orange-900" />
+                          </Popconfirm>
+                        }
+                      />
+
+                      {/* <Button>Xem</Button> */}
+                    </Space>
+                  </div>
+                ),
+                children: (
+                  <>
+                    {question?.listAnswer?.map((answer) => (
+                      <p>Đ/A : {answer?.answer}</p>
+                    ))}
+                  </>
+                ),
+
+                showArrow: false,
+              };
+            });
+          return {
+            key: index,
+            label: (
+              <div className="grid grid-cols-3 ">
+                <div className="col-span-1 mx-auto ">{section.title}</div>
+                <div className="col-span-1 mx-auto">{section.type}</div>
+                <Space className="col-span-1 mx-auto">
+                  <Button
+                    onClick={(e) =>
+                      handleAddQuestionInSection(e, section.id, section.title)
+                    }
+                    icon={<PlusCircleOutlined />}
+                  >
+                    Add question
+                  </Button>
+                  <Button
+                    onClick={(e) =>
+                      handleEditSection(e, section.id, section, false)
+                    }
+                    className=""
+                    icon={<FolderOpenOutlined className="text-lime-600" />}
+                  />
+
+                  <Button
+                    onClick={(e) =>
+                      handleEditSection(e, section.id, section, true)
+                    }
+                    icon={<EditFilled className="text-cyan-600" />}
+                  />
+                  <Button
+                    onClick={(e) => handleShowChildren(e)}
+                    icon={
                       <Popconfirm
                         title="Delete the task"
                         placement="bottomRight"
-                        description="Bạn có muốn xóa câu hỏi này ?"
-                        onConfirm={() => handelDeleteQuestion(question.id)}
-                        onCancel={cancel}
+                        description="Bạn có muốn xóa phần thi này ?"
+                        onConfirm={(e) => deleSection(e, section.id)}
+                        // onCancel={cancel}
                         okText="Có"
                         cancelText="Không"
                       >
-                        <DeleteFilled className="text-orange-900" />
+                        <DeleteFilled className="text-orange-700" />
                       </Popconfirm>
-                    </div>
-                  </div>
-                ),
-                collapsible: false,
-                children: <div>{listAnswer}</div>,
-              };
-            });
-            return {
-              key: section.id,
-
-              label: (
-                <div className="flex items-center justify-between">
-                  <p className="font-medium text-base">{section.title}</p>
-                  <div>
-                    <PlusCircleOutlined
-                      onClick={() =>
-                        handleAddQuestionInSection(section.id, section.title)
-                      }
-                    />
-                    {/* <Button
-                     className="mx-3 "
-                     onClick={() => handleEditSection(section.id, section)} */}
-                    {/* > */}
-                    <EditFilled
-                      className="mx-5"
-                      onClick={() => handleEditSection(section.id, section)}
-                    />
-                    {/* </Button> */}
-                    <Popconfirm
-                      title="Delete the task"
-                      placement="bottomRight"
-                      description="Bạn có muốn xóa phần thi này không"
-                      onConfirm={() => handelDeleteSection(section.id)}
-                      onCancel={cancel}
-                      okText="Yes"
-                      cancelText="No"
-                    >
-                      <DeleteFilled className="text-orange-700  " />
-                      {/* <Button> */}
-                      {/* </Button> */}
-                    </Popconfirm>
-                  </div>
-                </div>
-              ),
-              children: <Collapse collapsible={true} items={listQuestion} />,
-            };
-          });
-
-          return {
-            key: item.id,
-            label: (
-              <div className="flex items-center justify-between">
-                <p className="font-bold text-base">{item.name}</p>
-                <div>
-                  <PlusCircleOutlined
-                    onClick={() =>
-                      navigate(`/adminpage/add-section/${item.id}`)
                     }
                   />
-
-                  <EditFilled
-                    onClick={() => handleEditExam(item.id, item)}
-                    className="mx-5"
-                  />
-                  <Popconfirm
-                    title="Delete the task"
-                    description="Nếu đồng ý xóa bài thi này sẽ ảnh hưởng tới việc lưu trữ kết quả bài thi của người dùng  "
-                    onConfirm={() => handelDeleteExam(item.id)}
-                    onCancel={cancel}
-                    okText="Yes"
-                    cancelText="No"
-                  >
-                    <DeleteFilled className="text-orange-600 " />
-                  </Popconfirm>
-                </div>
+                </Space>
               </div>
             ),
-            children: <Collapse items={listSection} />,
+            showArrow: false,
+            children: (
+              <>
+                <Collapse
+                  items={listQuestion}
+                  defaultActiveKey={["1"]}
+                  collapsible={false}
+                />
+              </>
+            ),
           };
         })
     );
   };
   useEffect(() => {
-    console.log(dataItems);
-    handleSetItems(dataItems);
-    // handleGetDataExam();
-    if(isUpdateExam){
-      handleGetDataExam()
-      dispatch({type : "updateExam"})
-    }
-  }, [dataItems , isUpdateExam]);
-  
-  // if()
+    handleGetData();
+  }, []);
+  useEffect(() => {
+    handleSetItems();
+  }, [data1]);
 
-  const onChange = (key) => {
-    console.log(key);
+  const handleChageData = async () => {
+    const res = await handleSetData(sourceData, typeSection);
+    setData1(res);
+  };
+  const handleTest = () => {
+    console.log(sourceData);
   };
 
-  return (
-    <div className="">
-      <Collapse items={items} defaultActiveKey={["1"]} className="" />
+  useEffect(() => {
+    handleChageData();
+  }, [typeSection]);
 
-      <ModalEditExam
-        idExam={idExam}
-        dataExam={dataExam}
-        handleGetDataExam={handleGetDataExam}
+  return (
+    <div>
+      {/* <h2 onClick={handleTest}>{examId}</h2> */}
+      <DropDown />
+      <Collapse
+        items={items}
+        defaultActiveKey={["1"]}
+        collapsible={false}
+        className=""
+        showArrow={false}
       />
+
       <ModalEditSection
         idSection={idSection}
         dataSection={dataSection}
-        handleGetDataExam={handleGetDataExam}
+        handleGetDataExam={handleGetData}
       />
       <ModalEditQuestion
         dataQuestion={dataQuestion}
         answers={listAnswer}
-        handleGetDataExam={handleGetDataExam}
+        handleGetDataExam={handleGetData}
       />
       <ModalAddQuestionToSection
         idSection={idSection}
         title={sectionTitle}
-        handleGetDataExam={handleGetDataExam}
+        handleGetDataExam={handleGetData}
       />
     </div>
   );

@@ -1,4 +1,3 @@
-
 import request from "./request";
 
 export const createExam = async (data) => {
@@ -68,9 +67,9 @@ export const uploadFileExcel = (data) => {
   return request.post("/mocktest/exam/importFile", data);
 };
 
-export const findExamByName = (name) =>{
-  return request.get(`/mocktest/exam/find/${name}`)
-}
-export const filterUserResponseByCondition = (data) =>{
-  return request.post("/mocktest/userresponse/filter" , data)
-}
+export const findExamByName = (name) => {
+  return request.get(`/mocktest/exam/find/${name}`);
+};
+export const filterUserResponseByCondition = (data) => {
+  return request.post("/mocktest/userresponse/filter", data);
+};

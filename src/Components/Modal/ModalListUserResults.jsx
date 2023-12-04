@@ -44,7 +44,7 @@ function ModalListUserResults({ listResults, total,nameExam ,email}) {
             onChange: handlePageChange,
           }}
         >
-          <Column align="center" title="Điểm" dataIndex="point" key="point" />
+          <Column align="center" title="Điểm" dataIndex="totalPoint" key="point" />
           <Column
             align="center"
             title="Đánh giá bài thi"

@@ -4,11 +4,11 @@ import { AppContext } from "../AppContext/AppContext";
 import { useForm } from "antd/es/form/Form";
 import { updateExam } from "../../Services/APImocktest";
 
-function ModalEditExam({idExam , dataExam , handleGetDataExam}) {
+function ModalEditExam({idExam , dataExam }) {
 //   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, dispatch } = useContext(AppContext);
   const { isOpenModalEditExam } = data;
-
+console.log("dataExam" , dataExam);
   const handleCancel = () => 
   {
     form.resetFields();
@@ -20,8 +20,8 @@ function ModalEditExam({idExam , dataExam , handleGetDataExam}) {
       name : values.name , 
       timeExam : values.timeExam , 
       id : idExam , 
-      isFree : values.free ,
-      type : values.typeExam
+      isFree : values.isFree ,
+      type : values.type
     }).then((res)=>{
       console.log(res.data);
       if(res.data.success== true){
@@ -85,7 +85,7 @@ function ModalEditExam({idExam , dataExam , handleGetDataExam}) {
         >
           <Input className="mb-1"  />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           label="Thời gian bài thi (phút) "
           name="timeExam"
           rules={[
@@ -96,22 +96,24 @@ function ModalEditExam({idExam , dataExam , handleGetDataExam}) {
           ]}
         >
           <Input className="mb-1" type="number"/>
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           label="Loại bài thi "
-          name="typeExam"
+          name="type"
           rules={[
             {
               required: true,
               message: "Nhập loại bài thi !",
             },
           ]}
+          className="mt-3"
         >
           <Input className="mb-1" type=""/>
         </Form.Item>
         <Form.Item
           label="Bài thi miễn phí"
-          name="free"
+          className="mt-3"
+          name="isFree"
           rules={[
             {
               required: true,
@@ -122,6 +124,7 @@ function ModalEditExam({idExam , dataExam , handleGetDataExam}) {
           <Input className="mb-1" type=""/>
         </Form.Item>
         <Form.Item
+             className="mt-5"
           wrapperCol={{
             offset: 20,
             span: 16,

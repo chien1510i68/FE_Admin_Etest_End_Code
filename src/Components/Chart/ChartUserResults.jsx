@@ -6,7 +6,7 @@ function ChartUserResults({data , title}) {
     const config = {
       data,
       xField: 'id',
-      yField: 'point',
+      yField: 'totalPoint',
       xAxis: {
         label: {
           autoRotate: false,

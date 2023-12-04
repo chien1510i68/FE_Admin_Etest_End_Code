@@ -18,7 +18,8 @@ function HomePageStatistic(props) {
     if(selectKey ===1 ){
 
         getAllUserResponse().then((res) => {
-          console.log(res.data.data.items);
+          // console.log(res.data.data.items);
+          console.log("data in statistic : " , res);
           setData(res?.data?.data?.items);
         });
     }else if(selectKey ===2 ){
@@ -65,7 +66,7 @@ function HomePageStatistic(props) {
 //     }
 //   };
   return (
-    <div className="mx-5">
+    <div className=" overflow-auto h-[100vh] bg-white ">
       <div className="flex w-full items-center justify-around my-5">
         <Search
           placeholder="input search text"
@@ -90,7 +91,7 @@ function HomePageStatistic(props) {
         </Dropdown>
       </div>
       {selectKey === 1 ? (
-        <Table dataSource={data} className="text-center">
+        <Table dataSource={data} className="text-center h-[80vh] overflow-auto">
           <Column
             align="center"
             title="Email"

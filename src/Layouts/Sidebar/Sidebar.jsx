@@ -147,7 +147,38 @@ function Sidebar(props) {
         navigate("/adminpage/document");
       },
     },
-    {
+    // {
+    //   label: "Thi thử ",
+    //   key: "mocktest",
+    //   icon: <TeamOutlined />,
+    //   children: [
+    //     {
+    //       label: "Quản lý đề thi",
+    //       key: "10",
+    //       icon: <FileTextOutlined />,
+    //       onClick: () => {
+    //         navigate("/adminpage/infor-exam");
+    //       },
+    //     },
+    //     {
+    //       label: "Quản lý bài thi",
+    //       icon: <FileTextOutlined />,
+    //       key: "11",
+    //       onClick: () => {
+    //         navigate("/adminpage/user-test");
+    //       },
+    //     },
+    //     {
+    //       label: "Thống kê",
+    //       icon: <FileTextOutlined />,
+    //       key: "12",
+    //       onClick: () => {
+    //         navigate("/adminpage/statistics");
+    //       },
+    //     },
+    //   ],
+    // },
+{
       label: "Thi thử ",
       key: "mocktest",
       icon: <TeamOutlined />,

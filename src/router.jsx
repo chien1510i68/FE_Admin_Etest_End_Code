@@ -42,6 +42,8 @@ import HomePageStatistic from "./Page/Statistics/HomePageStatistic";
 import DetailExamresults from "./Page/Exam/DetailExamresults";
 import StatisticExam from "./Page/Statistics/StatisticExam";
 import ChangePassword from "./Components/Modal/ChangePassword";
+import CollapseExam from "./Page/MockTest/CollapseExam";
+
 // import Editor from "./Components/CKEditor/CKEditor";
 
 export const router = createBrowserRouter([
@@ -263,8 +265,7 @@ export const router = createBrowserRouter([
       {
         path: "contest",
         element: <Contest />,
-      },
-      {
+      }, {
         path: "create-question",
         element: <CreateQuestion />,
       },
@@ -272,9 +273,14 @@ export const router = createBrowserRouter([
         path: `add-section/:id`,
         element: <AddSectionToExam />,
       },
+     
       {
         path: "infor-exam",
         element: <InforExams />,
+      },
+      {
+        path : "detail-exam/:examId" ,
+        element : <CollapseExam/>
       },
       {
         path: "statistics/:responseId",
