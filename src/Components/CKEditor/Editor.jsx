@@ -32,13 +32,12 @@ import { notification } from "antd";
 import Cookies from "js-cookie";
 
 function Editor({ onChange, initialValues }) {
-  const UPLOAD_SERVICE =
-    "https://01ad-118-70-132-104.ngrok-free.app/file/upload";
+  const UPLOAD_SERVICE = "https://service.edustar.com.vn/file/upload";
 
-  const jwt = Cookies.get("jwt");
+  const token = Cookies.get("token");
   const headers = new Headers();
-  if (jwt) {
-    headers.append("Authorization", `Bearer ${jwt}`);
+  if (token) {
+    headers.append("Authorization", `Bearer ${token}`);
   }
 
   function uploadAdapter(loader) {

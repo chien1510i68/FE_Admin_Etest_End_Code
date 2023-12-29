@@ -26,7 +26,11 @@ function AddEditNews({ onSuccess, openModal, data, onOpenChange }) {
       } else if (res?.data?.error?.statusCode === 2) {
         {
           res?.data?.error?.errorDetailList.map((e) =>
-            message.error(e.message)
+            message.open({
+              type: "error",
+              content: e.message,
+              duration: 8,
+            })
           );
         }
       }
@@ -42,7 +46,11 @@ function AddEditNews({ onSuccess, openModal, data, onOpenChange }) {
       } else if (res?.data?.error?.statusCode === 2) {
         {
           res?.data?.error?.errorDetailList.map((e) =>
-            message.error(e.message)
+            message.open({
+              type: "error",
+              content: e.message,
+              duration: 20,
+            })
           );
         }
       }
@@ -161,5 +169,4 @@ function AddEditNews({ onSuccess, openModal, data, onOpenChange }) {
 
 export default AddEditNews;
 
-// const currentValues = formRef?.current?.getFieldsValue();
-// currentValues.image = response;
+

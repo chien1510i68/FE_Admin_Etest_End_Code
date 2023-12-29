@@ -4,7 +4,7 @@ import {
   Drawer,
   Input,
   Modal,
-  Popconfirm,
+  message,
   Popover,
   Space,
   Table,
@@ -74,7 +74,9 @@ function TableUser(props) {
     setLoading(true);
     getListUser()
       .then((res) => {
-        setDataUser(res?.data?.data?.items);
+        const data = res.data?.data?.items;
+        const sortedData = data.sort((a, b) => b.userId - a.userId);
+        setDataUser(sortedData);
         setTotal(res?.data?.data?.total);
       })
       .finally(() => {
@@ -125,9 +127,7 @@ function TableUser(props) {
 
   // Hàm lọc người dùng
   const handleFilter = (values) => {
-    console.log("values:: ", values);
     filterUser(values).then((res) => {
-      console.log("res", res);
       if (res?.status === 200) {
         setDataUser(res?.data?.data?.items);
       }

@@ -1,8 +1,7 @@
 import Cookies from "js-cookie";
 import axios from "axios";
 
-const base_url = "https://api.edustar.com.vn"
-// const base_url = "https://c428-118-70-132-104.ngrok-free.app"
+const base_url = "https://service.edustar.com.vn"
 
 const login_path = "/auth/login"
 
@@ -10,9 +9,9 @@ const login_path = "/auth/login"
 //Truoc khi call API
 axios.interceptors.request.use((req) => {
     //Noi 2 url voi nhau
-    const jwt = Cookies.get("jwt")
+    const token = Cookies.get("token")
     const newUrl = base_url + req.url
-    const Authorization =( login_path === req.url || req.url.startsWith("client")) ? undefined : `Bearer ${jwt}`
+    const Authorization =( login_path === req.url || req.url.startsWith("client")) ? undefined : `Bearer ${token}`
     return{
         ...req,
         url: newUrl,

@@ -62,7 +62,9 @@ function NonVerifiedCustomer(props) {
 
   const getNonVerifiedCustomer = (values) => {
     filterIsVerifiedCustomer(values).then((res) => {
-      setNonVerifiedCustomer(res.data?.data?.items);
+      const data = res.data?.data?.items;
+      const sortedData = data.sort((a, b) => b.userId - a.userId);
+      setNonVerifiedCustomer(sortedData);
       setTotal(res?.data?.data?.total);
     });
   };

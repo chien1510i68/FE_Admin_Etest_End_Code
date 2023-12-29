@@ -15,19 +15,37 @@ function Login(props) {
     login(values)
       .then((res) => {
         if (res?.data?.success === true) {
-          Cookies.set("jwt", res?.data?.data?.jwt);
-          message.success("Đăng nhập thành công");
-          setLoading(false);
+          const checkPermission = res?.data?.data?.roles?.at(0);
+          if (checkPermission === "ADMIN") {
+            Cookies.set("token", res?.data?.data?.jwt);
+            message.success("Đăng nhập thành công");
+            setLoading(false);
+            navgate("/adminpage/user");
+          } else if (checkPermission === "STAFF") {
+            Cookies.set("token", res?.data?.data?.jwt);
+            message.success("Đăng nhập thành công");
+            setLoading(false);
+            navgate("/adminpage/customer");
+          } else {
+            message.error("Bạn không có quyền đăng nhập");
+          }
         }
-        if (res?.data?.success === false) {
+        if (res?.data?.error?.statusCode === 500) {
+          message.error(res?.data?.error?.message);
           navgate("/");
-          message.error("Hết phiên đăng nhập");
         }
-        const checkPermission = res?.data?.data?.roles?.at(0);
-        if (checkPermission === "ADMIN") {
-          navgate("/adminpage/user");
-        } else {
-          navgate("/adminpage/customer");
+        if (res?.data?.error?.statusCode === 3) {
+          message.error("Hết phiên đăng nhập");
+          navgate("/");
+        }
+        if (res?.data?.error?.statusCode === 2) {
+          res?.data?.error?.errorDetailList.map((e) =>
+            message.open({
+              type: "error",
+              content: e.message,
+              duration: 9,
+            })
+          );
         }
       })
       .finally(() => {
@@ -40,7 +58,7 @@ function Login(props) {
   return (
     <div className="relative flex h-[100vh]">
       <div>
-        <img src={pic} alt="" className="w-[42rem] h-[43rem] " />
+        <img src={pic} alt="" className="w-[42rem] h-[100vh] " />
       </div>
       <Form
         className="login_form"

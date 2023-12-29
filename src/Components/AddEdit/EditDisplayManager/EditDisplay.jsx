@@ -25,7 +25,11 @@ function EditDisplay({ onSuccess, openModal, data, onOpenChange }) {
       } else if (res?.data?.error?.statusCode === 2) {
         {
           res?.data?.error?.errorDetailList.map((e) =>
-            message.error(e.message)
+            message.open({
+              type: "error",
+              content: e.message,
+              duration: 8,
+            })
           );
         }
       }
@@ -79,30 +83,32 @@ function EditDisplay({ onSuccess, openModal, data, onOpenChange }) {
             5: "HOME",
           }}
         />
-        <ProFormUploadButton
-          name="image"
-          title="Click to upload"
-          label="Upload ảnh"
-          fileList={listFile}
-          transform={(value) => {
-            return {
-              image: fieldFile || "", // cập nhật không upload file mới thì lấy giá trị value trong form
-            };
-          }}
-          fieldProps={{
-            listType: "picture-card",
-            method: "POST",
-            name: "file",
-            customRequest: handleUpload,
-            multiple: true,
-            onRemove: () => setListFile([]),
-            openFileDialogOnClick: true,
-            onChange: (file) => {
-              console.log("file:: ", file);
-            },
-          }}
-          action="process.env.BASE_URL/file/upload"
-        />
+        {!(data.image && data.image.startsWith("BƯỚC")) && (
+          <ProFormUploadButton
+            name="image"
+            title="Click to upload"
+            label="Upload ảnh"
+            fileList={listFile}
+            transform={(value) => {
+              return {
+                image: fieldFile || "", // cập nhật không upload file mới thì lấy giá trị value trong form
+              };
+            }}
+            fieldProps={{
+              listType: "picture-card",
+              method: "POST",
+              name: "file",
+              customRequest: handleUpload,
+              multiple: true,
+              onRemove: () => setListFile([]),
+              openFileDialogOnClick: true,
+              onChange: (file) => {
+                console.log("file:: ", file);
+              },
+            }}
+            action="process.env.BASE_URL/file/upload"
+          />
+        )}
       </ModalForm>
     </>
   );

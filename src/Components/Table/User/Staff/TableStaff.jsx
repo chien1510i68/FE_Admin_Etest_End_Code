@@ -64,7 +64,9 @@ function TableStaff(props) {
 
   const getStaff = (values) => {
     filterStaff(values).then((res) => {
-      setDataStaff(res?.data?.data?.items);
+      const data = res.data?.data?.items;
+      const sortedData = data.sort((a, b) => b.userId - a.userId);
+      setDataStaff(sortedData);
       setTotal(res?.data?.data?.total);
     });
   };

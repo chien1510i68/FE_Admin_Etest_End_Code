@@ -56,12 +56,15 @@ function VerifiedCustomer(props) {
 
   const handleGetCustomer = () => {
     getListUser().then((res) => {
-      setData(res.data?.data?.items);
+      const data1 = res.data?.data?.items;
+      const sortedData = data1.sort((a, b) => b.userId - a.userId);
+      setData(sortedData);
     });
   };
 
   const verifiedCustomer = data.filter(
-    (customer) => customer?.verified === true
+    (customer) =>
+      customer?.verified === true && customer?.role?.roleId === "CUSTOMER"
   );
   // Hàm xóa từng người dùng
   const handleDelete = (userId) => {

@@ -10,12 +10,19 @@ function ChangePassword({ onCancel }) {
   const onFinish = (values) => {
     changepassword(values).then((res) => {
       if (res?.data?.success) {
-        message.success(`${res?.data?.data}`);
-        // router.push("/user");
+        message.open({
+          type: "success",
+          content: res?.data?.data,
+          duration: 5,
+        });
         onCancel();
         form.resetFields();
       } else if (res?.data?.error?.statusCode === 500) {
-        message.error(res?.data?.error?.message);
+        message.open({
+          type: "error",
+          content: res?.data?.error?.message,
+          duration: 10,
+        });
       }
     });
   };

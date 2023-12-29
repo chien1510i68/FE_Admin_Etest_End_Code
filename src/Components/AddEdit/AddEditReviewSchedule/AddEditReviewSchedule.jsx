@@ -31,7 +31,11 @@ function AddEditReviewSchedule({ onSuccess, openModal, data, onOpenChange }) {
       } else if (res?.data?.error?.statusCode === 2) {
         {
           res?.data?.error?.errorDetailList.map((e) =>
-            message.error(e.message)
+            message.open({
+              type: "error",
+              content: e.message,
+              duration: 8,
+            })
           );
         }
       }

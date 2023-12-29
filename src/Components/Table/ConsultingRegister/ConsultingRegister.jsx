@@ -82,7 +82,9 @@ function ConsultingRegister(props) {
 
   const handleGetCR = () => {
     getListConsultingRegister().then((res) => {
-      setData(res?.data?.data?.items);
+      const data1 = res.data?.data?.items;
+      const sortedData = data1.sort((a, b) => b.id - a.id);
+      setData(sortedData);
       setTotal(res?.data?.data?.total);
     });
   };

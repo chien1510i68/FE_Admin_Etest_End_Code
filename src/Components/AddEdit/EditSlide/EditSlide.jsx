@@ -16,7 +16,6 @@ function EditSlide({ onSuccess, openModal, data, onOpenChange }) {
   const [fieldFile, setFieldFile] = useState("");
   const formRef = useRef(null);
 
-  // Hàm cập nhật khách hàng
   const handleUpdateSlide = (values) => {
     updateSlide(data?.id, values).then((res) => {
       if (res?.data?.success === true) {
@@ -25,7 +24,11 @@ function EditSlide({ onSuccess, openModal, data, onOpenChange }) {
       } else if (res?.data?.error?.statusCode === 2) {
         {
           res?.data?.error?.errorDetailList.map((e) =>
-            message.error(e.message)
+            message.open({
+              type: "error",
+              content: e.message,
+              duration: 8,
+            })
           );
         }
       }

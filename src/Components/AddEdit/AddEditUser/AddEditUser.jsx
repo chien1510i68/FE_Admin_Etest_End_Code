@@ -13,6 +13,7 @@ import {
   createUser,
   getAllRole,
   getListService,
+  getProfileUser,
   updateUser,
   uploadFile,
 } from "../../../Services/lead";
@@ -22,8 +23,8 @@ import "../style.css";
 import _ from "lodash";
 
 function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
-  console.log("data", data);
   const [dataRole, setDataRole] = useState([]);
+  const [role, setRole] = useState({});
   const [dataService, setDataService] = useState([]);
   const [switchValue, setSwitchValue] = useState(false);
   const [listFile, setListFile] = useState([]);
@@ -41,6 +42,26 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
       });
       setDataRole(options);
     });
+  };
+
+  const handleGetProfileUser = () => {
+    getProfileUser().then((res) => {
+      setRole(res?.data?.data);
+    });
+  };
+  const checkPermission = role?.role?.roleId === "STAFF";
+
+  const getRoleOptions = (userRole) => {
+    if (userRole) {
+      return [
+        {
+          label: "CUSTOMER",
+          value: "CUSTOMER",
+        },
+      ];
+    } else {
+      return dataRole;
+    }
   };
 
   const handleGetService = () => {
@@ -61,11 +82,22 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
     createUser(values).then((res) => {
       if (res?.data?.success === true) {
         message.success("Tạo người dùng thành công");
+
         onSuccess();
       } else if (res?.data?.error?.statusCode === 500) {
-        message.error(res?.data?.error?.message);
+        message.open({
+          type: "error",
+          content: res?.data?.error?.message,
+          duration: 10,
+        });
       } else if (res?.data?.error?.statusCode === 2) {
-        res?.data?.error?.errorDetailList.map((e) => message.error(e.message));
+        res?.data?.error?.errorDetailList.map((e) =>
+          message.open({
+            type: "error",
+            content: e.message,
+            duration: 15,
+          })
+        );
       }
     });
   };
@@ -79,11 +111,19 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
       } else if (res?.data?.error?.statusCode === 2) {
         {
           res?.data?.error?.errorDetailList.map((e) =>
-            message.error(e.message)
+            message.open({
+              type: "error",
+              content: e.message,
+              duration: 20,
+            })
           );
         }
       } else if (res?.data?.error?.statusCode === 500) {
-        message.error(res?.data?.error?.message);
+        message.open({
+          type: "error",
+          content: res?.data?.error?.message,
+          duration: 10,
+        });
       }
     });
   };
@@ -103,6 +143,7 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
   useEffect(() => {
     handleGetRole();
     handleGetService();
+    handleGetProfileUser();
   }, []);
 
   return (
@@ -153,20 +194,20 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
               },
             ]}
           />
-          {/* {!data.userId && ( */}
-          <ProFormText
-            width="md"
-            name="password"
-            label="Mật khẩu"
-            placeholder="Mật khẩu"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập mật khẩu ",
-              },
-            ]}
-          />
-          {/* )} */}
+          {!data.userId && (
+            <ProFormText
+              width="md"
+              name="password"
+              label="Mật khẩu"
+              placeholder="Mật khẩu"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập mật khẩu ",
+                },
+              ]}
+            />
+          )}
           <ProFormDatePicker
             width="md"
             name="dateOfBirth"
@@ -230,7 +271,6 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
             label="Avatar"
             title="Click to upload"
             fileList={listFile}
-            // fileList={}
             transform={(value) => {
               return {
                 avatar: fieldFile || "", // cập nhật không upload file mới thì lấy giá trị value trong form
@@ -252,7 +292,8 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
             width="md"
             name="roleId"
             initialValue={data?.userId ? data?.role?.name : ""}
-            options={dataRole}
+            // options={dataRole}
+            options={getRoleOptions(checkPermission)}
             label="Mã vai trò"
             placeholder="Mã vai trò"
             rules={[
@@ -280,8 +321,6 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
               }
             }}
             transform={(value) => {
-              console.log("value:: ", value);
-
               if (value?.at(0)?.name) {
                 console.log("true");
                 const list = value.map((val) => val?.id);
@@ -292,19 +331,6 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
                 return { services: value };
               }
             }}
-            // convertValue={(value) => {
-            //   console.log("value", value);
-            //   if (data?.userId) {
-            //     const name = value.map((name) => {
-            //       return {
-            //         label: name.name,
-            //         value: name.id,
-            //       };
-            //     });
-            //     console.log("name", name);
-            //     return name;
-            //   }
-            // }}
             mode="multiple"
             options={dataService}
             label="Dịch vụ"
@@ -317,8 +343,10 @@ function AddEditUser({ onSuccess, openModal, data, onOpenChange }) {
             ]}
           />
           <ProFormSwitch
-            name="isVerified"
+            name="verified"
             label="Xác thực Email"
+            // defaultChecked={data.verified}
+            initialValue={data.verified}
             fieldProps={{
               onChange: (checked) => {
                 setSwitchValue(checked);
