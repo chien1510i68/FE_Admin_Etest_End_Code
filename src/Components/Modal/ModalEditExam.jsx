@@ -85,8 +85,8 @@ console.log("dataExam" , dataExam);
         >
           <Input className="mb-1"  />
         </Form.Item>
-        {/* <Form.Item
-          label="Thời gian bài thi (phút) "
+        <Form.Item
+          label="Thời gian bài thi  "
           name="timeExam"
           rules={[
             {
@@ -94,9 +94,10 @@ console.log("dataExam" , dataExam);
               message: "Nhập thời gian của bài thi !",
             },
           ]}
+          className="mt-3"
         >
-          <Input className="mb-1" type="number"/>
-        </Form.Item> */}
+          <Input className="mb-1"  placeholder="Type exam is test or minitest"/>
+        </Form.Item> 
         <Form.Item
           label="Loại bài thi "
           name="type"
