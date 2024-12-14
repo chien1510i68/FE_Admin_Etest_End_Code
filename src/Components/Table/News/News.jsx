@@ -1,22 +1,21 @@
+import {
+  CloseOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  FilterOutlined,
+  SolutionOutlined
+} from "@ant-design/icons";
 import { PageContainer } from "@ant-design/pro-components";
 import { Button, Drawer, Input, Modal, Popover, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  CloseOutlined,
-  DeleteOutlined,
-  DownOutlined,
-  EditOutlined,
-  FilterOutlined,
-  SolutionOutlined,
-} from "@ant-design/icons";
-import AddEditNews from "../../AddEdit/AddEditNews/AddEditNews";
 import {
   delAllNews,
   deleteNews,
   filterNews,
   getListNews,
 } from "../../../Services/lead";
+import AddEditNews from "../../AddEdit/AddEditNews/AddEditNews";
 import DetailNews from "../../Details/DetailNews/DetailNews";
 import FilterNews from "../../FormFilter/FilterNews";
 

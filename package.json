@@ -1,5 +1,6 @@
 {
   "name": "ckeditor5-react-example",
+  "homepage": "admin",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,6 +17,7 @@
     "@ckeditor/ckeditor5-font": "^39.0.1",
     "@ckeditor/ckeditor5-heading": "^39.0.1",
     "@ckeditor/ckeditor5-image": "^39.0.1",
+    "@ckeditor/ckeditor5-link": "^39.0.2",
     "@ckeditor/ckeditor5-list": "^39.0.1",
     "@ckeditor/ckeditor5-paragraph": "^39.0.1",
     "@ckeditor/ckeditor5-react": "^6.1.0",

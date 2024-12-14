@@ -11,7 +11,7 @@ import { Essentials } from "@ckeditor/ckeditor5-essentials";
 import { Bold, Italic } from "@ckeditor/ckeditor5-basic-styles";
 import { Paragraph } from "@ckeditor/ckeditor5-paragraph";
 import { Heading } from "@ckeditor/ckeditor5-heading";
-import { List } from "@ckeditor/ckeditor5-list";
+// import { List } from "@ckeditor/ckeditor5-list";
 import {
   Table,
   TableToolbar,
@@ -30,6 +30,7 @@ import {
 } from "@ckeditor/ckeditor5-image";
 import { notification } from "antd";
 import Cookies from "js-cookie";
+import { Link } from "@ckeditor/ckeditor5-link";
 
 function Editor({ onChange, initialValues }) {
   const UPLOAD_SERVICE = "https://service.edustar.com.vn/file/upload";
@@ -96,7 +97,7 @@ function Editor({ onChange, initialValues }) {
             Italic,
             Paragraph,
             Font,
-            List,
+            
             Table,
             TableToolbar,
             TableProperties,
@@ -109,6 +110,7 @@ function Editor({ onChange, initialValues }) {
             ImageResize,
             ImageStyle,
             ImageToolbar,
+            Link
           ],
 
           toolbar: [
@@ -139,6 +141,7 @@ function Editor({ onChange, initialValues }) {
             "toggleImageCaption",
             "imageTextAlternative",
             "|",
+            "link", 
           ],
           table: {
             contentToolbar: [
@@ -148,6 +151,9 @@ function Editor({ onChange, initialValues }) {
               "tableProperties",
               "tableCellProperties",
             ],
+          },
+          link: {
+            addTargetToExternalLinks: true, // Mở liên kết bên ngoài trong tab mới (optional)
           },
 
           extraPlugins: [uploadPlugin],

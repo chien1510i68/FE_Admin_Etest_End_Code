@@ -37,7 +37,7 @@ function AddEditNews({ onSuccess, openModal, data, onOpenChange }) {
     });
   };
 
-  // Hàm cập nhật khách hàng
+  // Hàm cập nhật tin tức 
   const handleUpdateNews = (values) => {
     updateNews(data?.id, values).then((res) => {
       if (res?.data?.success === true) {
@@ -105,12 +105,12 @@ function AddEditNews({ onSuccess, openModal, data, onOpenChange }) {
           <ProFormUploadButton
             name="image"
             label="Upload Ảnh"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng upload ảnh ",
-              },
-            ]}
+            // rules={[
+            //   {
+            //     required: false,
+            //     message: "Vui lòng upload ảnh ",
+            //   },
+            // ]}
             title="Click to upload"
             fileList={listFile}
             transform={(value) => {

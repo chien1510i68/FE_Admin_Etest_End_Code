@@ -314,4 +314,5 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+],
+);
